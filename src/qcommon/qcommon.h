@@ -403,6 +403,3 @@ int CM_PointLeafnum( const vec3_t p );
 
 #include "../xanim/xanim_public.h"
 XModel* CM_XModelPrecache(const char *name);
-
-// Libcod
-#include "../libcod/gsc.hpp"
