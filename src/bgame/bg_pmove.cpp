@@ -1893,6 +1893,7 @@ void PM_GroundTrace(pmove_t *pm, pml_t *pml)
 
 				ps->groundEntityNum = trace.entityNum;
 				PM_AddTouchEnt(pm, trace.entityNum);
+				CJ_hook_Jump_End(pm, pml);
 			}
 			else
 			{
@@ -2459,6 +2460,8 @@ void PmoveSingle(pmove_t *pmove)
 	ps = pmove->ps;
 	BG_AnimUpdatePlayerStateConditions(pmove);
 
+	
+
 	if ( SLOWORD(ps->pm_flags) < 0 )
 	{
 		pmove->cmd.buttons &= 0x2300u;
@@ -2730,6 +2733,7 @@ void Pmove(pmove_t *pmove)
 			PmoveSingle(pmove);
 			pmove->oldcmd = pmove->cmd;
 		}
+		
 	}
 }
 

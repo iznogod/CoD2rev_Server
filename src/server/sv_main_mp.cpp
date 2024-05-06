@@ -357,7 +357,7 @@ static leakyBucket_t *SVC_BucketForAddress( netadr_t address, int burst, int per
 	leakyBucket_t *bucket = NULL;
 	int	i;
 	long hash = SVC_HashForAddress( address );
-	uint64_t now = Sys_Milliseconds64();
+	uint64_t now = Sys_Milliseconds();
 
 	for ( bucket = bucketHashes[ hash ]; bucket; bucket = bucket->next )
 	{
@@ -426,7 +426,7 @@ bool SVC_RateLimit( leakyBucket_t *bucket, int burst, int period )
 {
 	if ( bucket != NULL )
 	{
-		uint64_t now = Sys_Milliseconds64();
+		uint64_t now = Sys_Milliseconds();
 		int interval = now - bucket->lastTime;
 		int expired = interval / period;
 		int expiredRemainder = interval % period;
@@ -501,9 +501,7 @@ Redirect all printfs
 ===============
 */
 
-#ifdef LIBCOD
 extern dvar_t *sv_allowRcon;
-#endif
 
 extern dvar_t *rcon_password;
 void SVC_RemoteCommand( netadr_t from, msg_t *msg )
@@ -520,10 +518,8 @@ void SVC_RemoteCommand( netadr_t from, msg_t *msg )
 	char sv_outputbuf[SV_OUTPUTBUF_LENGTH];
 	static unsigned int lasttime = 0;
 
-#ifdef LIBCOD
 	if (!sv_allowRcon->current.boolean)
 		return;
-#endif
 
 #if COMPILE_RATELIMITER == 1
 	static leakyBucket_t bucket;

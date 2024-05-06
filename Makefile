@@ -29,6 +29,8 @@ SERVER_DIR=$(SRC_DIR)/server
 STRINGED_DIR=$(SRC_DIR)/stringed
 UNIVERSAL_DIR=$(SRC_DIR)/universal
 XANIM_DIR=$(SRC_DIR)/xanim
+OPENCJ_DIR=$(SRC_DIR)/opencj
+OPENCJ_EVENTS_DIR=$(SRC_DIR)/opencj/events
 
 # Target files
 TARGET=$(addprefix $(BIN_DIR)/,$(BIN_NAME)$(BIN_EXT))
@@ -44,6 +46,8 @@ UNIVERSAL_SOURCES=$(wildcard $(UNIVERSAL_DIR)/*.cpp)
 XANIM_SOURCES=$(wildcard $(XANIM_DIR)/*.cpp)
 LINUX_SOURCES=$(wildcard $(LINUX_DIR)/*.cpp)
 ZLIB_SOURCES=$(wildcard $(ZLIB_DIR)/*.c)
+OPENCJ_SOURCES=$(wildcard $(OPENCJ_DIR)/*.cpp)
+OPENCJ_EVENTS_SOURCES=$(wildcard $(OPENCJ_EVENTS_DIR)/*.cpp)
 
 # Object files.
 BGAME_OBJ=$(patsubst $(BGAME_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(BGAME_SOURCES))
@@ -54,6 +58,9 @@ SERVER_OBJ=$(patsubst $(SERVER_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SERVER_SOURCES))
 STRINGED_OBJ=$(patsubst $(STRINGED_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(STRINGED_SOURCES))
 UNIVERSAL_OBJ=$(patsubst $(UNIVERSAL_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(UNIVERSAL_SOURCES))
 XANIM_OBJ=$(patsubst $(XANIM_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(XANIM_SOURCES))
+OPENCJ_OBJ=$(patsubst $(OPENCJ_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(OPENCJ_SOURCES))
+OPENCJ_EVENTS_OBJ=$(patsubst $(OPENCJ_EVENTS_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(OPENCJ_EVENTS_SOURCES))
+
 
 # Platform specific lists
 LINUX_OBJ=$(patsubst $(LINUX_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(LINUX_SOURCES))
@@ -64,7 +71,7 @@ ZLIB_OBJ=$(patsubst $(ZLIB_DIR)/%.c,$(OBJ_DIR)/%.o,$(ZLIB_SOURCES))
 cod2rev: mkdir $(TARGET)
     $(TARGET): \
 	$(BGAME_OBJ) $(CLIENTSCR_OBJ) $(GAME_OBJ) $(QCOMMON_OBJ) $(SERVER_OBJ) $(STRINGED_OBJ) \
-	$(UNIVERSAL_OBJ) $(XANIM_OBJ) $(LINUX_OBJ) $(ZLIB_OBJ)
+	$(UNIVERSAL_OBJ) $(XANIM_OBJ) $(LINUX_OBJ) $(ZLIB_OBJ) $(OPENCJ_OBJ) $(OPENCJ_EVENTS_OBJ)
 	$(CC) $(LFLAGS) -o $@ $^ $(LLIBS)
 
 mkdir:
@@ -120,6 +127,16 @@ $(OBJ_DIR)/%.o: $(LINUX_DIR)/%.cpp
 
 # A rule to build zlib source code.
 $(OBJ_DIR)/%.o: $(ZLIB_DIR)/%.c
+	@echo $(CC)  $@
+	@$(CC) -c $(CFLAGS) -o $@ $<
+
+# A rule to build opencj source code.
+$(OBJ_DIR)/%.o: $(OPENCJ_DIR)/%.cpp
+	@echo $(CC)  $@
+	@$(CC) -c $(CFLAGS) -o $@ $<
+
+# A rule to build opencj events source code.
+$(OBJ_DIR)/%.o: $(OPENCJ_EVENTS_DIR)/%.cpp
 	@echo $(CC)  $@
 	@$(CC) -c $(CFLAGS) -o $@ $<
 

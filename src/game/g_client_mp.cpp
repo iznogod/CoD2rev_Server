@@ -283,6 +283,7 @@ void ClientDisconnect(int clientNum)
 	}
 
 	HudElem_ClientDisconnect(ent);
+	CJ_hook_ClientDisconnect(ent);
 
 	if ( Scr_IsSystemActive() )
 		Scr_PlayerDisconnect(ent);
@@ -338,6 +339,7 @@ const char* ClientConnect(unsigned int clientNum, unsigned short scriptPersId)
 	client->sess.forceSpectatorClient = -1;
 
 	G_InitGentity(ent);
+	CJ_hook_ClientConnect(ent);
 
 	ent->handler = 0;
 	ent->client = client;

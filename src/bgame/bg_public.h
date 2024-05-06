@@ -1543,3 +1543,5 @@ void BG_PlayerStateToEntityState(playerState_s *ps, entityState_s *s, int snap, 
 void Mantle_RegisterDvars();
 void Jump_RegisterDvars();
 void BG_RegisterDvars();
+
+#include "../opencj/opencj.h"

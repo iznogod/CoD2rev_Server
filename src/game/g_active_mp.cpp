@@ -68,16 +68,12 @@ qboolean G_UpdateClientInfo(gentity_s *ent)
 	return updated;
 }
 
-#ifdef LIBCOD
 extern dvar_t *g_playerCollision;
-#endif
 
 void G_UpdatePlayerContents(gentity_s *ent)
 {
-#ifdef LIBCOD
 	if (!g_playerCollision->current.boolean)
 		return;
-#endif
 	if ( ent->client->noclip )
 	{
 		ent->r.contents = 0;
@@ -92,7 +88,8 @@ void G_UpdatePlayerContents(gentity_s *ent)
 	}
 	else
 	{
-		ent->r.contents = 0x2000000;
+		//ent->r.contents = 0x2000000;
+		ent->r.contents = 258;
 	}
 }
 
@@ -422,26 +419,26 @@ extern dvar_t *g_mantleBlockEnable;
 extern dvar_t *g_mantleBlockTimeBuffer;
 void G_AddPlayerMantleBlockage(float *endPos, int duration, pmove_t *pm)
 {
-	gentity_s *owner;
-	gentity_s *ent;
+	// gentity_s *owner;
+	// gentity_s *ent;
 
-	if (!g_mantleBlockEnable->current.boolean)
-		return;
+	// if (!g_mantleBlockEnable->current.boolean)
+	// 	return;
 
-	owner = &g_entities[pm->ps->clientNum];
-	ent = G_Spawn();
-	ent->parent = owner;
-	ent->r.ownerNum = pm->ps->clientNum;
-	ent->r.contents = 0x10000;
-	ent->clipmask = 0x10000;
-	ent->r.svFlags = 33;
-	ent->s.eType = ET_INVISIBLE;
-	ent->handler = 19;
-	VectorCopy(owner->r.mins, ent->r.mins);
-	VectorCopy(owner->r.maxs, ent->r.maxs);
-	G_SetOrigin(ent, endPos);
-	SV_LinkEntity(ent);
-	ent->nextthink = g_mantleBlockTimeBuffer->current.integer + level.time + duration;
+	// owner = &g_entities[pm->ps->clientNum];
+	// ent = G_Spawn();
+	// ent->parent = owner;
+	// ent->r.ownerNum = pm->ps->clientNum;
+	// ent->r.contents = 0x10000;
+	// ent->clipmask = 0x10000;
+	// ent->r.svFlags = 33;
+	// ent->s.eType = ET_INVISIBLE;
+	// ent->handler = 19;
+	// VectorCopy(owner->r.mins, ent->r.mins);
+	// VectorCopy(owner->r.maxs, ent->r.maxs);
+	// G_SetOrigin(ent, endPos);
+	// SV_LinkEntity(ent);
+	// ent->nextthink = g_mantleBlockTimeBuffer->current.integer + level.time + duration;
 }
 
 extern dvar_t *g_inactivity;
@@ -1029,119 +1026,116 @@ update:
 	}
 }
 
-#ifdef LIBCOD
 extern dvar_t *g_playerEject;
-#endif
 
 extern dvar_t *g_playerCollisionEjectSpeed;
 int StuckInClient(gentity_s *self)
 {
-	float speed;
-	float ejectSpeed;
-	float *pVel;
-	float *velocity;
-	float fDist;
-	gentity_s *hit;
-	int i;
-	float selfSpeed;
-	float hitSpeed;
-	float vDelta[2];
-	int iPushTime;
+	return 0;
+	// float speed;
+	// float ejectSpeed;
+	// float *pVel;
+	// float *velocity;
+	// float fDist;
+	// gentity_s *hit;
+	// int i;
+	// float selfSpeed;
+	// float hitSpeed;
+	// float vDelta[2];
+	// int iPushTime;
 
-#ifdef LIBCOD
-	if (!g_playerEject->current.boolean)
-		return 0;
-#endif
+	// if (!g_playerEject->current.boolean)
+	// 	return 0;
 
-	iPushTime = 300;
+	// iPushTime = 300;
 
-	if ( (self->client->ps.pm_flags & 0x800000) == 0 )
-		return 0;
+	// if ( (self->client->ps.pm_flags & 0x800000) == 0 )
+	// 	return 0;
 
-	if ( self->client->sess.sessionState )
-		return 0;
+	// if ( self->client->sess.sessionState )
+	// 	return 0;
 
-	if ( self->r.contents != 0x2000000 && self->r.contents != 0x4000000 )
-		return 0;
+	// if ( self->r.contents != 0x2000000 && self->r.contents != 0x4000000 )
+	// 	return 0;
 
-	hit = g_entities;
+	// hit = g_entities;
 
-	for ( i = 0; ; ++i )
-	{
-		if ( i >= level.maxclients )
-			return 0;
+	// for ( i = 0; ; ++i )
+	// {
+	// 	if ( i >= level.maxclients )
+	// 		return 0;
 
-		if ( hit->r.inuse
-		        && (hit->client->ps.pm_flags & 0x800000) != 0
-		        && hit->client->sess.sessionState == SESS_STATE_PLAYING
-		        && hit != self
-		        && hit->client
-		        && hit->health > 0
-		        && (hit->r.contents == 0x2000000 || hit->r.contents == 0x4000000)
-		        && hit->r.absmin[0] <= self->r.absmax[0]
-		        && self->r.absmin[0] <= hit->r.absmax[0]
-		        && hit->r.absmin[1] <= self->r.absmax[1]
-		        && self->r.absmin[1] <= hit->r.absmax[1]
-		        && hit->r.absmin[2] <= self->r.absmax[2]
-		        && self->r.absmin[2] <= hit->r.absmax[2] )
-		{
-			vDelta[0] = hit->r.currentOrigin[0] - self->r.currentOrigin[0];
-			vDelta[1] = hit->r.currentOrigin[1] - self->r.currentOrigin[1];
+	// 	if ( hit->r.inuse
+	// 	        && (hit->client->ps.pm_flags & 0x800000) != 0
+	// 	        && hit->client->sess.sessionState == SESS_STATE_PLAYING
+	// 	        && hit != self
+	// 	        && hit->client
+	// 	        && hit->health > 0
+	// 	        && (hit->r.contents == 0x2000000 || hit->r.contents == 0x4000000)
+	// 	        && hit->r.absmin[0] <= self->r.absmax[0]
+	// 	        && self->r.absmin[0] <= hit->r.absmax[0]
+	// 	        && hit->r.absmin[1] <= self->r.absmax[1]
+	// 	        && self->r.absmin[1] <= hit->r.absmax[1]
+	// 	        && hit->r.absmin[2] <= self->r.absmax[2]
+	// 	        && self->r.absmin[2] <= hit->r.absmax[2] )
+	// 	{
+	// 		vDelta[0] = hit->r.currentOrigin[0] - self->r.currentOrigin[0];
+	// 		vDelta[1] = hit->r.currentOrigin[1] - self->r.currentOrigin[1];
 
-			fDist = self->r.maxs[0] + hit->r.maxs[0];
+	// 		fDist = self->r.maxs[0] + hit->r.maxs[0];
 
-			if ( (float)((float)(vDelta[0] * vDelta[0]) + (float)(vDelta[1] * vDelta[1])) <= (float)(fDist * fDist) )
-				break;
-		}
+	// 		if ( (float)((float)(vDelta[0] * vDelta[0]) + (float)(vDelta[1] * vDelta[1])) <= (float)(fDist * fDist) )
+	// 			break;
+	// 	}
 
-		++hit;
-	}
+	// 	++hit;
+	// }
 
-	vDelta[0] = hit->r.currentOrigin[0] - self->r.currentOrigin[0];
-	vDelta[1] = hit->r.currentOrigin[1] - self->r.currentOrigin[1];
+	// vDelta[0] = hit->r.currentOrigin[0] - self->r.currentOrigin[0];
+	// vDelta[1] = hit->r.currentOrigin[1] - self->r.currentOrigin[1];
 
-	vDelta[0] = G_crandom() + vDelta[0];
-	vDelta[1] = G_crandom() + vDelta[1];
+	// vDelta[0] = G_crandom() + vDelta[0];
+	// vDelta[1] = G_crandom() + vDelta[1];
 
-	Vec2Normalize(vDelta);
+	// Vec2Normalize(vDelta);
 
-	if ( Vec2Length(hit->client->ps.velocity) <= 0.0 )
-		ejectSpeed = 0.0;
-	else
-		ejectSpeed = (float)g_playerCollisionEjectSpeed->current.integer;
+	// if ( Vec2Length(hit->client->ps.velocity) <= 0.0 )
+	// 	ejectSpeed = 0.0;
+	// else
+	// 	ejectSpeed = (float)g_playerCollisionEjectSpeed->current.integer;
 
-	hitSpeed = ejectSpeed;
+	// hitSpeed = ejectSpeed;
 
-	if ( Vec2Length(self->client->ps.velocity) <= 0.0 )
-		speed = 0.0;
-	else
-		speed = (float)g_playerCollisionEjectSpeed->current.integer;
+	// if ( Vec2Length(self->client->ps.velocity) <= 0.0 )
+	// 	speed = 0.0;
+	// else
+	// 	speed = (float)g_playerCollisionEjectSpeed->current.integer;
 
-	selfSpeed = speed;
+	// selfSpeed = speed;
 
-	if ( ejectSpeed < 0.000099999997 && speed < 0.000099999997 )
-	{
-		hitSpeed = (float)hit->client->ps.speed;
-		selfSpeed = (float)self->client->ps.speed;
-	}
+	// if ( ejectSpeed < 0.000099999997 && speed < 0.000099999997 )
+	// {
+	// 	hitSpeed = (float)hit->client->ps.speed;
+	// 	selfSpeed = (float)self->client->ps.speed;
+	// }
 
-	velocity = hit->client->ps.velocity;
+	// velocity = hit->client->ps.velocity;
 
-	velocity[0] = hitSpeed * vDelta[0];
-	velocity[1] = hitSpeed * vDelta[1];
+	// velocity[0] = hitSpeed * vDelta[0];
+	// velocity[1] = hitSpeed * vDelta[1];
 
-	hit->client->ps.pm_time = 300;
-	hit->client->ps.pm_flags |= 0x200u;
+	// hit->client->ps.pm_time = 300;
+	// hit->client->ps.pm_flags |= 0x200u;
 
-	pVel = self->client->ps.velocity;
+	// pVel = self->client->ps.velocity;
 
-	pVel[0] = -selfSpeed * vDelta[0];
-	pVel[1] = -selfSpeed * vDelta[1];
+	// pVel[0] = -selfSpeed * vDelta[0];
+	// pVel[1] = -selfSpeed * vDelta[1];
 
-	self->client->ps.pm_time = 300;
-	self->client->ps.pm_flags |= 0x200u;
+	// self->client->ps.pm_time = 300;
+	// self->client->ps.pm_flags |= 0x200u;
 
-	return 1;
+	// return 1;
 }
 
 unsigned int G_GetNonPVSPlayerInfo(gentity_s *pSelf, float *vPosition, int iLastUpdateEnt)
@@ -1287,6 +1281,7 @@ void ClientEndFrame(gentity_s *entity)
 	entity->handler = 10;
 	client->ps.deltaTime = 0;
 	modelsUpdated = G_UpdateClientInfo(entity);
+	CJ_hook_ClientEndFrame(entity);
 
 	if ( client->sess.connected == CON_CONNECTED )
 	{
@@ -1302,6 +1297,7 @@ void ClientEndFrame(gentity_s *entity)
 		}
 		else if ( client->ps.clientNum == entity->s.number )
 		{
+			
 			entity->r.svFlags |= 2u;
 			entity->r.svFlags &= ~1u;
 			entity->takedamage = 1;

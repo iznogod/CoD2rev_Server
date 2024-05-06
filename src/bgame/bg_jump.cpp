@@ -199,6 +199,7 @@ void Jump_Start(pmove_t *pm, pml_t *pml, float height)
 	float velocitySqrd;
 
 	ps = pm->ps;
+	CJ_hook_Jump_Start(pm, pml, height);
 	velocitySqrd = (height + height) * (float)pm->ps->gravity;
 
 	if ( (pm->ps->pm_flags & 0x80000) != 0 && ps->pm_time <= 1800 )

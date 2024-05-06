@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "opencj.h": "c",
+        "qcommon.h": "c",
+        "compare": "cpp",
+        "cstdint": "cpp"
+    }
+}

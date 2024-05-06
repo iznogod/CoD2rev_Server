@@ -440,9 +440,7 @@ This allows fair starts with variable load times.
 */
 extern dvar_t *sv_gametype;
 extern dvar_t *sv_serverid;
-#ifdef LIBCOD
 extern dvar_t *sv_kickbots;
-#endif
 void SV_MapRestart(int fast_restart)
 {
 	const char *dropreason;
@@ -519,13 +517,11 @@ void SV_MapRestart(int fast_restart)
 			continue;
 		}
 
-#ifdef LIBCOD
 		if (sv_kickbots->current.boolean && cl->bot)
 		{
 			SV_DropClient(cl, "EXE_DISCONNECTED");
 			continue;
 		}
-#endif
 
 		// add the map_restart command
 		SV_AddServerCommand(cl, SV_CMD_RELIABLE, va("%c", savepersist == 0 ? 66 : 110));

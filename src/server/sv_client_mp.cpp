@@ -189,9 +189,7 @@ qboolean SV_IsTempBannedGuid(int guid)
 	return 0;
 }
 
-#ifdef LIBCOD
 extern dvar_t *sv_cracked;
-#endif
 
 void SV_AuthorizeIpPacket( netadr_t from )
 {
@@ -228,14 +226,11 @@ void SV_AuthorizeIpPacket( netadr_t from )
 
 	s = SV_Cmd_Argv( 2 );
 	r = SV_Cmd_Argv( 3 );
-
-#ifdef LIBCOD
 	if (sv_cracked->current.boolean)
 	{
 		s = "accept";
 		r = "KEY_IS_GOOD";
 	}
-#endif
 
 	if ( !Q_stricmp( s, "demo" ) )
 	{
@@ -435,10 +430,7 @@ Fill up msg with data
 extern dvar_t *sv_allowDownload;
 extern dvar_t *sv_maxRate;
 extern dvar_t *sv_pure;
-
-#ifdef LIBCOD
 extern dvar_t *sv_downloadMessage;
-#endif
 
 void SV_WriteDownloadToClient( client_t *cl, msg_t *msg )
 {
@@ -463,7 +455,6 @@ void SV_WriteDownloadToClient( client_t *cl, msg_t *msg )
 	if ( cl->wwwDlAck )
 		return; // wwwDl acknowleged
 
-#ifdef LIBCOD
 	if (strlen(sv_downloadMessage->current.string))
 	{
 		Com_sprintf(errorMessage, sizeof(errorMessage), sv_downloadMessage->current.string);
@@ -476,7 +467,6 @@ void SV_WriteDownloadToClient( client_t *cl, msg_t *msg )
 		*cl->downloadName = 0;
 		return; // Download message instead of download
 	}
-#endif
 
 	if (sv_wwwDownload->current.boolean && cl->wwwDownload)
 	{
@@ -487,10 +477,8 @@ void SV_WriteDownloadToClient( client_t *cl, msg_t *msg )
 		}
 	}
 
-#ifdef LIBCOD
 	cl->rate = 90000;
 	cl->snapshotMsec = 50;
-#endif
 
 	if (!cl->download)
 	{
@@ -599,22 +587,7 @@ void SV_WriteDownloadToClient( client_t *cl, msg_t *msg )
 		}
 	}
 
-	if (!rate)
-	{
-		blockspersnap = 1;
-	}
-	else
-	{
-		blockspersnap = ( (rate * cl->snapshotMsec) / 1000 + MAX_DOWNLOAD_BLKSIZE ) /
-		                MAX_DOWNLOAD_BLKSIZE;
-	}
-
-	if (blockspersnap < 0)
-		blockspersnap = 1;
-
-#ifdef LIBCOD
 	blockspersnap = 1;
-#endif
 
 	while (blockspersnap--)
 	{
@@ -839,6 +812,7 @@ void SV_ClientThink(client_t *cl, usercmd_s *cmd)
 
 	G_SetLastServerTime(cl - svs.clients, cmd->serverTime);
 	ClientThink(cl - svs.clients);
+	CJ_hook_ClientThink(cl, cmd);
 }
 
 /*

@@ -2831,14 +2831,14 @@ static void FS_Startup(const char *gameName)
 		FS_AddGameDirectory(fs_homepath->current.string, "raw");
 	}
 
-	if ( fs_cdpath->current.string[0] )
-	{
-		FS_AddGameDirectory(fs_cdpath->current.string, "devraw_shared");
-		FS_AddGameDirectory(fs_cdpath->current.string, "devraw");
-		FS_AddGameDirectory(fs_cdpath->current.string, "raw_shared");
-		FS_AddGameDirectory(fs_cdpath->current.string, "raw");
-		FS_AddGameDirectory(fs_cdpath->current.string, gameName);
-	}
+	// if ( fs_cdpath->current.string[0] )
+	// {
+	// 	FS_AddGameDirectory(fs_cdpath->current.string, "devraw_shared");
+	// 	FS_AddGameDirectory(fs_cdpath->current.string, "devraw");
+	// 	FS_AddGameDirectory(fs_cdpath->current.string, "raw_shared");
+	// 	FS_AddGameDirectory(fs_cdpath->current.string, "raw");
+	// 	FS_AddGameDirectory(fs_cdpath->current.string, gameName);
+	// }
 
 	if ( fs_basepath->current.string[0] )
 		FS_AddGameDirectory(fs_basepath->current.string, gameName);
